@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -549,16 +550,44 @@ public class Snake
 
                 // DRAW SNAKE BODY
 
+                Mesh OutlineMesh;
                 if (node.Value.Engorged)
                 {
                     mesh = GameController.Meshes["EngorgedMesh"];
+                    OutlineMesh = GameController.Meshes["SnakeEngorgedBodyOutline"];
                 }
                 else
                 {
-                    mesh = GameController.Meshes["TinySquareMesh"];
+                    mesh = GameController.Meshes["SnakeBody"];
+                    OutlineMesh = GameController.Meshes["SnakeBodyOutline"];
                 }
 
                 GameController.DrawMeshOnGrid(mesh, mat, node.Value.Position, Quaternion.identity);
+
+                if (!IsPlayer)
+                {
+                    // DRAW ENEMY SNAKE OUTLINE
+                    Vector3Int LayerOffset = new Vector3Int(0, 0, 10);
+                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position + LayerOffset, Quaternion.Euler(0f, 0f, 0f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position + LayerOffset, Quaternion.Euler(0f, 0f, 90f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position + LayerOffset, Quaternion.Euler(0f, 0f, 180f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position + LayerOffset, Quaternion.Euler(0f, 0f, 270f));
+                }
+                
+                if (node.Value.Engorged)
+                {
+                    // DRAW EATEN MATERIAL
+                    Material EatenMat;
+                    if(node.Value.Digestion == SnakeBody.FoodType.Food)
+                    {
+                        EatenMat = GameController.Materials["Food"];
+                    } else
+                    {
+                        EatenMat = GameController.Materials["Tier" + node.Value.FoodTier];
+                    }
+                    GameController.DrawMeshOnGrid(GameController.Meshes["ArenaSquareMesh"], EatenMat, node.Value.Position, Quaternion.Euler(0f, 0f, 0f));
+                }
+
                 node = node.Previous;
             }
         }

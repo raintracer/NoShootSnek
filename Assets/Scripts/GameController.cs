@@ -165,7 +165,7 @@ public class GameController : MonoBehaviour
         {
             for (int j = TileIndexMin; j <= TileIndexMax; j++)
             {
-                DrawMeshOnGrid(Meshes["ArenaSquareMesh"], Materials["Arena Grid"], new Vector2Int(i, j), Quaternion.identity);
+                DrawMeshOnGrid(Meshes["ArenaSquareMesh"], Materials["Arena Grid"], new Vector3Int(i, j, 0), Quaternion.identity);
             }
         }
 
@@ -265,7 +265,7 @@ public class GameController : MonoBehaviour
             triangles = new int[6] { 0, 1, 2, 0, 2, 3 }
         };
 
-        Meshes["TinySquareMesh"] = new Mesh()
+        Meshes["SnakeBody"] = new Mesh()
         {
             vertices = new Vector3[4]
             {
@@ -277,14 +277,27 @@ public class GameController : MonoBehaviour
             triangles = new int[6] { 0, 1, 2, 0, 2, 3 }
         };
 
-        Meshes["TinySquareMesh"] = new Mesh()
+        float OutlinePixelThickness = 0.05f;
+        Meshes["SnakeBodyOutline"] = new Mesh()
         {
             vertices = new Vector3[4]
             {
                 new Vector3(-GridSize / 4, GridSize / 4),
                 new Vector3(GridSize / 4, GridSize / 4),
-                new Vector3(GridSize / 4, -GridSize / 4),
-                new Vector3(-GridSize / 4, -GridSize / 4)
+                new Vector3(GridSize / 4, GridSize / 4 - OutlinePixelThickness),
+                new Vector3(-GridSize / 4, GridSize / 4 - OutlinePixelThickness),
+            },
+            triangles = new int[6] { 0, 1, 2, 0, 2, 3 }
+        };
+
+        Meshes["SnakeEngorgedBodyOutline"] = new Mesh()
+        {
+            vertices = new Vector3[4]
+            {
+                new Vector3(-GridSize / 3, GridSize / 3),
+                new Vector3(GridSize / 3, GridSize / 3),
+                new Vector3(GridSize / 3, GridSize / 3 - OutlinePixelThickness),
+                new Vector3(-GridSize / 3, GridSize / 3 - OutlinePixelThickness),
             },
             triangles = new int[6] { 0, 1, 2, 0, 2, 3 }
         };
@@ -301,6 +314,7 @@ public class GameController : MonoBehaviour
             },
             triangles = new int[6] { 0, 1, 2, 0, 2, 3 }
         };
+
 
         Meshes["SnakeHeadMesh"] = new Mesh()
         {
@@ -414,7 +428,7 @@ public class GameController : MonoBehaviour
         {
             Graphics.DrawMeshNow(
                 mesh,
-                new Vector2(pos.x * GridSize, pos.y * GridSize) + (AffectedByWobble ? GetWobbleOffset(new Vector2Int(pos.x, pos.y)) : Vector2.zero) + RenderOffset,
+                new Vector3(pos.x * GridSize, pos.y * GridSize) + (Vector3)(AffectedByWobble ? GetWobbleOffset(new Vector2Int(pos.x, pos.y)) : Vector2.zero) + (Vector3)RenderOffset,
                 quat);
         }
     }
@@ -448,5 +462,6 @@ public class GameController : MonoBehaviour
         Materials["Tier2"]      = Resources.Load<Material>("Tier2");
         Materials["Tier3"]      = Resources.Load<Material>("Tier3");
         Materials["Tier4"]      = Resources.Load<Material>("Tier4");
+        Materials["Enemy Outline"]      = Resources.Load<Material>("Enemy Outline");
     }
 }

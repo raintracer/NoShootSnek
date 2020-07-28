@@ -1,4 +1,6 @@
 ﻿
+// #define DisplayDeathMessagesFlag
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +11,8 @@ public class Snake
 
     public Vector2Int HeadPosition { get; private set; }
     private int Length;
-    const bool DisplayDeathMessagesFlag = false;
+
+    bool DisplayDeathMessagesFlag = false;
 
     public LinkedList<SnakeBody> Bodies { get; private set; }
 

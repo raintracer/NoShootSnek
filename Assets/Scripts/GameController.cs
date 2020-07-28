@@ -8,9 +8,9 @@ public class GameController : MonoBehaviour
     [SerializeField] public static Dictionary<string, Material> Materials = new Dictionary<string, Material>();
     [HideInInspector] public static Dictionary<string, Mesh> Meshes { get; private set; } = new Dictionary<string, Mesh>();
 
-    public readonly static bool AIMODE = true;
+    public readonly static bool AIMODE = false;
     private const bool RenderCollissionMapFlag = true;
-    [SerializeField] private float TIME_SCALE; 
+    [SerializeField] private float TIME_SCALE = 1f; 
 
     static Vector2 Movement = Vector2.zero;
     static readonly float ArenaGameSize = 10f;
@@ -196,6 +196,7 @@ public class GameController : MonoBehaviour
         // RENDER COLLISSION MAP
         if (RenderCollissionMapFlag)
         {
+
             for (int i = TileIndexMin; i <= TileIndexMax; i++)
             {
                 for (int j = TileIndexMin; j <= TileIndexMax; j++)
@@ -320,14 +321,13 @@ public class GameController : MonoBehaviour
 
     public static void PlaceRandomFood()
     {
-        // BUILD ARRAY OF ELIGIBILE POSITIONS
-        // START WITH EVERYTHING IN THE AVAILABLE GRID
+
         Collection<Vector2Int> EligibleSpots = new Collection<Vector2Int>();
         for (int i = TileIndexMin; i <= TileIndexMax; i++)
         {
             for (int j = TileIndexMin; j <= TileIndexMax; j++)
             {
-                if (!CollisionMap[j, i]) EligibleSpots.Add(new Vector2Int(j, i));
+                if (!CollisionMap[j, i]) EligibleSpots.Add(new Vector2Int(i, j));
             }
         }
 

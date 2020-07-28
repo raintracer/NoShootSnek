@@ -10,15 +10,15 @@ public class GameController : MonoBehaviour
     [SerializeField] public static Dictionary<string, Material> Materials = new Dictionary<string, Material>();
     [HideInInspector] public static Dictionary<string, Mesh> Meshes { get; private set; } = new Dictionary<string, Mesh>();
 
-    public readonly static bool AIMODE = false;
+    [HideInInspector] public readonly static bool AIMODE = false;
     private const bool RenderCollissionMapFlag = true;
     [SerializeField] private float TIME_SCALE = 1f; 
 
-    static Vector2 Movement = Vector2.zero;
-    static readonly float ArenaGameSize = 10f;
+    public static Vector2 Movement = Vector2.zero;
+    readonly static float ArenaGameSize = 10f;
     static readonly int MAX_TILE_SIZE = 101;
     static readonly int CENTER_TILE_INDEX = (MAX_TILE_SIZE - 1) / 2;
-    public static bool[,] CollisionMap { get; set; } = new bool[MAX_TILE_SIZE, MAX_TILE_SIZE];
+    public static bool[,] CollisionMap { get; set; }
 
     [HideInInspector] public static int TileDimensionInt { get; private set; }
     [HideInInspector] public static int TileIndexMax { get; private set; }
@@ -27,16 +27,15 @@ public class GameController : MonoBehaviour
     static Vector2 RenderOffset;
     static float GridSize;
 
-    public static Collection<Vector2Int> Food { get; private set; } = new Collection<Vector2Int>();
-    public static Dictionary<Vector2Int, int> Eggs { get; private set; } = new Dictionary<Vector2Int, int>();
+    public static Collection<Vector2Int> Food { get; private set; }
+    public static Dictionary<Vector2Int, int> Eggs { get; private set; }
 
-    public static Collection<Vector2Int> Walls { get; private set; } = new Collection<Vector2Int>();
+    public static Collection<Vector2Int> Walls { get; private set; }
 
     static PlayerInputMap Inputs;
     static Snake PlayerSnake;
-    static List<Snake> EnemySnakes = new List<Snake>();
-
-    static Dictionary<Vector2Int, Wobble> Wobbles = new Dictionary<Vector2Int, Wobble>();
+    static List<Snake> EnemySnakes;
+    static Dictionary<Vector2Int, Wobble> Wobbles;
 
     // Wobble Settings
     readonly static float TestWobbleDissipation = 1.05f;
@@ -66,6 +65,7 @@ public class GameController : MonoBehaviour
 
     public static Vector2 GetMovement()
     {
+
         return Movement;
     }
 
@@ -76,7 +76,16 @@ public class GameController : MonoBehaviour
 
     void Awake()
     {
-        LoadMaterials();
+
+        // INITIALIZE STATIC PROPERTIES
+        CollisionMap = new bool[MAX_TILE_SIZE, MAX_TILE_SIZE];
+        Food = new Collection<Vector2Int>();
+        Eggs = new Dictionary<Vector2Int, int>();
+        Walls = new Collection<Vector2Int>();
+        EnemySnakes = new List<Snake>();
+        Wobbles = new Dictionary<Vector2Int, Wobble>();
+
+    LoadMaterials();
         DefineSounds();
         SetTileDimension(9f);
 

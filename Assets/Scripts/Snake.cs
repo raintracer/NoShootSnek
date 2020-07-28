@@ -448,14 +448,16 @@ public class Snake
 
     public void DetermineFacing()
     {
-        Pathfinder Path = new Pathfinder(Tier);
-        List<PathFinderNode> PathNodes= Path.FindPath(HeadPosition.x, HeadPosition.y, GameController.Food[0].x, GameController.Food[0].y);
 
-        if (PathNodes == null)
+        Pathfinder Path;
+        List<PathFinderNode> PathNodes;
+        int PathTier = 1;
+        do
         {
-            Path = new Pathfinder(Tier);
+            Path = new Pathfinder(PathTier);
             PathNodes = Path.FindPath(HeadPosition.x, HeadPosition.y, GameController.Food[0].x, GameController.Food[0].y);
-        }
+            PathTier++;
+        } while (PathNodes == null && PathTier <= Tier);
 
         if (PathNodes != null)
         {

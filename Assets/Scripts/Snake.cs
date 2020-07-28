@@ -20,7 +20,8 @@ public class Snake
     private bool Dying = false;
     public bool Dead { get; private set; } = false;
 
-    private readonly float MoveSpeed = 0.05f;
+    private const float PlayerBaseMoveSpeed = 0.05f;
+    private readonly float MoveSpeed;
     private float SpeedMultiplier = 1;
     private float MoveFraction = 0f;
 
@@ -85,10 +86,31 @@ public class Snake
 
         GameController.CollisionMap[HeadPosition.y, HeadPosition.x] = true;
         Bodies = new LinkedList<SnakeBody>();
-        
-        if (!IsPlayer && !GameController.AIMODE)
+
+        if (IsPlayer)
         {
-            MoveSpeed /= 2f;
+            MoveSpeed = PlayerBaseMoveSpeed;
+        }
+        if (!IsPlayer)
+        {
+            switch (Tier)
+            {
+                case 1:
+                    MoveSpeed = PlayerBaseMoveSpeed / 2f;
+                    break;
+                case 2:
+                    MoveSpeed = PlayerBaseMoveSpeed / 1.5f;
+                    break;
+                case 3:
+                    MoveSpeed = PlayerBaseMoveSpeed;
+                    break;
+                case 4:
+                    MoveSpeed = PlayerBaseMoveSpeed * 1.2f;
+                    break;
+                default:
+                    Debug.LogError("Snake has invalid Tier: " + Tier);
+                    break;
+            }
         }
 
     }

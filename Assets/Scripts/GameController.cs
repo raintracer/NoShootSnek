@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -37,6 +39,8 @@ public class GameController : MonoBehaviour
     // Wobble Settings
     readonly static float TestWobbleDissipation = 1.05f;
     static public Sound Sound_Food { get; private set; }
+
+    IEnumerator DeathCoroutine = null;
 
     public struct Sound
     {
@@ -114,6 +118,12 @@ public class GameController : MonoBehaviour
     {
 
         PlayerSnake.UpdateSnake();
+        if (PlayerSnake.Dead && DeathCoroutine == null)
+        {
+            DeathCoroutine = PlayerDeadScript();
+            StartCoroutine(DeathCoroutine);
+        }
+
         List<int> DeadSnakes = new List<int>();
         for (int i = 0; i < EnemySnakes.Count; i++)
         {
@@ -477,5 +487,17 @@ public class GameController : MonoBehaviour
         Materials["Tier3"]      = Resources.Load<Material>("Tier3");
         Materials["Tier4"]      = Resources.Load<Material>("Tier4");
         Materials["Enemy Outline"]      = Resources.Load<Material>("Enemy Outline");
+    }
+
+    IEnumerator PlayerDeadScript()
+    {
+        while (EnemySnakes.Count > 0)
+        {
+            yield return new WaitForSeconds(3); 
+            TIME_SCALE++;
+        }
+        TIME_SCALE = 1;
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(0);
     }
 }

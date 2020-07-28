@@ -30,6 +30,8 @@ public class GameController : MonoBehaviour
     public static Collection<Vector2Int> Food { get; private set; } = new Collection<Vector2Int>();
     public static Dictionary<Vector2Int, int> Eggs { get; private set; } = new Dictionary<Vector2Int, int>();
 
+    public static Collection<Vector2Int> Walls { get; private set; } = new Collection<Vector2Int>();
+
     static PlayerInputMap Inputs;
     static Snake PlayerSnake;
     static List<Snake> EnemySnakes = new List<Snake>();
@@ -94,6 +96,7 @@ public class GameController : MonoBehaviour
         Inputs.Player.Move.performed += ctx => Movement = ctx.ReadValue<Vector2>();
 
         PlaceRandomFood();
+        PlaceWall(new Vector2Int(49, 49));
 
     }
 
@@ -223,6 +226,22 @@ public class GameController : MonoBehaviour
             }
         }
 
+        // RENDER WALLS
+        // DRAW SNAKE BODY
+
+        foreach (Vector2Int WallPosition in Walls)
+        {
+            
+            DrawMeshOnGrid(Meshes["EngorgedMesh"], Materials["Wall"], WallPosition, Quaternion.identity);
+
+            // DRAW WALL OUTLINE
+            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], Materials["Enemy Outline"], WallPosition, Quaternion.Euler(0f, 0f, 0f));
+            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], Materials["Enemy Outline"], WallPosition, Quaternion.Euler(0f, 0f, 90f));
+            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], Materials["Enemy Outline"], WallPosition, Quaternion.Euler(0f, 0f, 180f));
+            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], Materials["Enemy Outline"], WallPosition, Quaternion.Euler(0f, 0f, 270f));
+        
+        }
+        
     }
 
     public static void PlaceEgg(Vector2Int Position, int Tier)
@@ -231,6 +250,11 @@ public class GameController : MonoBehaviour
         CollisionMap[Position.y, Position.x] = true;
     }
 
+    public static void PlaceWall(Vector2Int Position)
+    {
+        Walls.Add(Position);
+        CollisionMap[Position.y, Position.x] = true;
+    }
 
     //
     //  MESH DEFINITIONS
@@ -478,15 +502,16 @@ public class GameController : MonoBehaviour
 
     void LoadMaterials()
     {
-        Materials["Arena Grid"] = Resources.Load<Material>("Arena Grid");
-        Materials["Player"]     = Resources.Load<Material>("Player");
-        Materials["Food"]       = Resources.Load<Material>("Food");
-        Materials["Line"]       = Resources.Load<Material>("Line");
-        Materials["Tier1"]      = Resources.Load<Material>("Tier1");
-        Materials["Tier2"]      = Resources.Load<Material>("Tier2");
-        Materials["Tier3"]      = Resources.Load<Material>("Tier3");
-        Materials["Tier4"]      = Resources.Load<Material>("Tier4");
+        Materials["Arena Grid"]         = Resources.Load<Material>("Arena Grid");
+        Materials["Player"]             = Resources.Load<Material>("Player");
+        Materials["Food"]               = Resources.Load<Material>("Food");
+        Materials["Line"]               = Resources.Load<Material>("Line");
+        Materials["Tier1"]              = Resources.Load<Material>("Tier1");
+        Materials["Tier2"]              = Resources.Load<Material>("Tier2");
+        Materials["Tier3"]              = Resources.Load<Material>("Tier3");
+        Materials["Tier4"]              = Resources.Load<Material>("Tier4");
         Materials["Enemy Outline"]      = Resources.Load<Material>("Enemy Outline");
+        Materials["Wall"]               = Resources.Load<Material>("Wall");
     }
 
     IEnumerator PlayerDeadScript()

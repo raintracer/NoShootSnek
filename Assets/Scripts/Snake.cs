@@ -415,7 +415,14 @@ public class Snake
             switch (Bodies.Last.Value.Digestion)
             {
                 case SnakeBody.FoodType.Food:
-                    GameController.PlaceEgg(Bodies.Last.Value.Position, Tier + 1);
+                    if (Tier + 1 <= 4)
+                    {
+                        GameController.PlaceEgg(Bodies.Last.Value.Position, Tier + 1);
+                    }
+                    else
+                    {
+                        GameController.PlaceWall(Bodies.Last.Value.Position);
+                    }
                     break;
                 case SnakeBody.FoodType.Egg:
                     if (IsPlayer)

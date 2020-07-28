@@ -165,7 +165,7 @@ public class GameController : MonoBehaviour
         {
             for (int j = TileIndexMin; j <= TileIndexMax; j++)
             {
-                DrawMeshOnGrid(Meshes["ArenaSquareMesh"], Materials["Arena Grid"], new Vector3Int(i, j, 0), Quaternion.identity);
+                DrawMeshOnGrid(Meshes["ArenaSquareMesh"], Materials["Arena Grid"], new Vector2Int(i, j), Quaternion.identity);
             }
         }
 
@@ -300,6 +300,20 @@ public class GameController : MonoBehaviour
                 new Vector3(-GridSize / 3, GridSize / 3 - OutlinePixelThickness),
             },
             triangles = new int[6] { 0, 1, 2, 0, 2, 3 }
+        };
+
+        Meshes["SnakeSnoutOutline"] = new Mesh()
+        {
+            vertices = new Vector3[6]
+            {
+                new Vector3(GridSize / 6, GridSize / 3),
+                new Vector3(GridSize / 3, 0),
+                new Vector3(GridSize / 6, -GridSize / 3),
+                new Vector3(GridSize / 6 - OutlinePixelThickness, GridSize / 3),
+                new Vector3(GridSize / 3 - OutlinePixelThickness, 0),
+                new Vector3(GridSize / 6 - OutlinePixelThickness, -GridSize / 3),
+            },
+            triangles = new int[12] { 0, 1, 3, 1, 4, 3, 1, 2, 4, 2, 5, 4 }
         };
 
         float SnakeLineMeshSize = 0.025f;

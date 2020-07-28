@@ -567,11 +567,10 @@ public class Snake
                 if (!IsPlayer)
                 {
                     // DRAW ENEMY SNAKE OUTLINE
-                    Vector3Int LayerOffset = new Vector3Int(0, 0, 10);
-                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position + LayerOffset, Quaternion.Euler(0f, 0f, 0f));
-                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position + LayerOffset, Quaternion.Euler(0f, 0f, 90f));
-                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position + LayerOffset, Quaternion.Euler(0f, 0f, 180f));
-                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position + LayerOffset, Quaternion.Euler(0f, 0f, 270f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position, Quaternion.Euler(0f, 0f, 0f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position, Quaternion.Euler(0f, 0f, 90f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position, Quaternion.Euler(0f, 0f, 180f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position, Quaternion.Euler(0f, 0f, 270f));
                 }
                 
                 if (node.Value.Engorged)
@@ -616,6 +615,7 @@ public class Snake
         if (!Dying)
         {
             GameController.DrawMeshOnGrid(GameController.Meshes["SnakeHeadMesh"], mat, HeadPosition, quat);
+            GameController.DrawMeshOnGrid(GameController.Meshes["SnakeSnoutOutline"], GameController.Materials["Enemy Outline"], HeadPosition, quat);
         }
         
 

@@ -227,7 +227,8 @@ public class Snake
 
         }
 
-        Debug.LogWarning("A snake MoveFraction is over 2. This will lead to pathfinding errors");
+
+        if (MoveFraction >= 2) Debug.LogWarning("A snake MoveFraction is over 2. This will lead to pathfinding errors. Player: " + IsPlayer);
 
         while (MoveFraction > 1)
         {

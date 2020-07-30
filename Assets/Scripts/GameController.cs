@@ -14,13 +14,19 @@ public class GameController : MonoBehaviour
 
     [HideInInspector] public readonly static bool AIMODE = false;
     private const bool RenderCollissionMapFlag = true;
-    [SerializeField] private float TIME_SCALE = 1f; 
+    [SerializeField] private float TIME_SCALE = 1f;
 
     public static Vector2 Movement = Vector2.zero;
     readonly static float ArenaGameSize = 10f;
     static readonly int MAX_TILE_SIZE = 101;
     static readonly int CENTER_TILE_INDEX = (MAX_TILE_SIZE - 1) / 2;
     public static bool[,] CollisionMap { get; set; }
+
+    private static int HighScore {
+        get { return PlayerPrefs.GetInt("HighScore"); }
+        set { PlayerPrefs.SetInt("HighScore", value); }
+    }
+
 
     [HideInInspector] public static int TileDimensionInt { get; private set; }
     [HideInInspector] public static int TileIndexMax { get; private set; }
@@ -53,6 +59,7 @@ public class GameController : MonoBehaviour
     public static void AddScore()
     {
         Score++;
+        HighScore = Mathf.Max(HighScore, Score);
         ScoreTextObject.GetComponent<TextMeshProUGUI>().text = Score.ToString();
     }
 

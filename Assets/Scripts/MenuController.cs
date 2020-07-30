@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,12 @@ public class MenuController : MonoBehaviour
 {
 
     GameObject AnyKeyTextObject;
+    GameObject HighScoreTextObject;
+    private float HighScore
+    {
+        get { return PlayerPrefs.GetInt("HighScore"); }
+    }
+
 
     public void Awake()
     {
@@ -17,6 +24,15 @@ public class MenuController : MonoBehaviour
         {
             Debug.LogError("Play Button Text not found");
         }
+
+        HighScoreTextObject = GameObject.Find("High Score Text");
+        if (HighScoreTextObject == null)
+        {
+            Debug.LogError("High Score Text not found.");
+        }
+
+        HighScoreTextObject.GetComponent<TextMeshProUGUI>().text = "High Score: " + HighScore.ToString("0000");
+
     }
 
     public void Start()

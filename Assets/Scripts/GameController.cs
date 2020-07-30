@@ -200,6 +200,11 @@ public class GameController : MonoBehaviour
 
         Time.timeScale = TIME_SCALE;
 
+        // Handle Music Changes
+        float PitchDampen = 200f; 
+        GetSound("SnekDance").SetPitch(1 + (TIME_SCALE -1) / PitchDampen);
+
+
     }
 
     public void OnPostRender()
@@ -550,15 +555,20 @@ public class GameController : MonoBehaviour
 
     IEnumerator PlayerDeadScript()
     {
+        float TimeDelay = 0.25f;
+        float TimeIncrement = TimeDelay / 5f;
+        float MenuTimeDelay = 2f;
+        TIME_SCALE = 3;
+
         while (EnemySnakes.Count > 0)
         {
-            yield return new WaitForSeconds(3); 
-            TIME_SCALE++;
-            
+            yield return new WaitForSeconds(TimeDelay); 
+            TIME_SCALE += TimeIncrement;
         }
+
         TIME_SCALE = 1;
-        yield return new WaitForSeconds(2);
-        SceneManager.LoadScene(0);
+        yield return new WaitForSeconds(MenuTimeDelay);
+        SceneManager.LoadScene(0); //Load Menu
     }
 
 }

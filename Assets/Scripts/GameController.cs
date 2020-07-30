@@ -35,7 +35,8 @@ public class GameController : MonoBehaviour
     public static Collection<Vector2Int> Walls { get; private set; }
 
     static PlayerInputMap Inputs;
-    static Snake PlayerSnake;
+    static Snake 
+        PlayerSnake;
     static List<Snake> EnemySnakes;
     static Dictionary<Vector2Int, Wobble> Wobbles;
 
@@ -74,6 +75,15 @@ public class GameController : MonoBehaviour
     {
         Score++;
         ScoreTextObject.GetComponent<TextMeshProUGUI>().text = Score.ToString();
+    }
+
+    public static void UpdateProgressBar()
+    {
+        GameObject ProgressBarBG = GameObject.Find("Canvas/ProgressBar/Background");
+        GameObject ProgressBarFG = GameObject.Find("Canvas/ProgressBar/Foreground");
+        ProgressBarFG.transform.localScale = new Vector3(   ProgressBarBG.transform.localScale.x, 
+                                                            ProgressBarBG.transform.localScale.y * ((TileDimensionFloat - 1) % 2) / 2, 
+                                                            ProgressBarBG.transform.localScale.z);
     }
 
     public static Vector2 GetMovement()
@@ -127,7 +137,11 @@ public class GameController : MonoBehaviour
         PlaceRandomFood();
         PlaceWall(new Vector2Int(49, 49));
 
+        UpdateProgressBar();
+
     }
+
+
 
     static void SetTileDimension(float Amount)
     {
@@ -144,6 +158,7 @@ public class GameController : MonoBehaviour
     static public void GrowArena()
     {
         SetTileDimension(TileDimensionFloat += 18f / (TileDimensionFloat * TileDimensionFloat));
+        UpdateProgressBar();
     }
 
     public void Update()

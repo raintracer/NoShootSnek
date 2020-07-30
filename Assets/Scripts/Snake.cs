@@ -43,7 +43,8 @@ public class Snake
         Up = 0,
         Right = 1,
         Down = 2,
-        Left = 3
+        Left = 3,
+        None = 4
     }
 
     public class SnakeBody
@@ -650,6 +651,30 @@ public class Snake
         }
         
 
+    }
+
+    public static MoveDir GetMovementFacing()
+    {
+        if (GameController.GetMovement().x > 0)
+        {
+            return MoveDir.Right;
+        }
+        else if (GameController.GetMovement().x < 0)
+        {
+            return MoveDir.Left;
+        }
+        else if (GameController.GetMovement().y > 0)
+        {
+            return MoveDir.Up;
+        }
+        else if (GameController.GetMovement().y < 0)
+        {
+            return MoveDir.Down;
+        }
+        else
+        {
+            return MoveDir.None;
+        }
     }
 
 }

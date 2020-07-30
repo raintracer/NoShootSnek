@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameController : MonoBehaviour
 {
@@ -534,4 +535,5 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(2);
         SceneManager.LoadScene(0);
     }
+
 }

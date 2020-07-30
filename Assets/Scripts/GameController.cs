@@ -44,6 +44,9 @@ public class GameController : MonoBehaviour
 
     IEnumerator DeathCoroutine = null;
 
+    private static int Score;
+
+
     public struct Sound
     {
         public AudioSource source { get; private set; }
@@ -57,11 +60,16 @@ public class GameController : MonoBehaviour
             this.pitch = pitch;
             source.clip = Resources.Load<AudioClip>(clipName);
         }
-
+        
         public void Play()
         {
             source.Play();
         }
+    }
+
+    public static void AddScore()
+    {
+        Score++;
     }
 
     public static Vector2 GetMovement()
@@ -85,6 +93,7 @@ public class GameController : MonoBehaviour
         Walls = new Collection<Vector2Int>();
         EnemySnakes = new List<Snake>();
         Wobbles = new Dictionary<Vector2Int, Wobble>();
+        Score = 0;
 
     LoadMaterials();
         DefineSounds();

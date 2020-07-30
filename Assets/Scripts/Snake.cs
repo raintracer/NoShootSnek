@@ -128,6 +128,7 @@ public class Snake
             if (IsPlayer || GameController.AIMODE)
             {
                 GameController.GrowArena();
+                GameController.AddScore();
             }
             GameController.Sound_Food.Play();
             Length++;

@@ -37,6 +37,9 @@ public class Snake
 
     private Snake ForgingSnake;
     private readonly int Tier;
+
+    private const float BOOST_TIME_FLOOR = 0.1f;
+    private float BoostTime = 0;
     
     public enum MoveDir
     {
@@ -179,10 +182,16 @@ public class Snake
             MoveDir MovementFacing = GetMovementFacing();
             if (Facing == MovementFacing)
             {
-                SpeedMultiplier = 3f;
-            } else if (Facing == GameController.OppositeDirection(MovementFacing))
+                BoostTime += Time.fixedUnscaledDeltaTime;
+                if (BoostTime >= BOOST_TIME_FLOOR) SpeedMultiplier = 3f;
+            }
+            else
             {
-                SpeedMultiplier = 0.5f;
+                BoostTime = 0f;
+                if (Facing == GameController.OppositeDirection(MovementFacing))
+                {
+                    SpeedMultiplier = 0.5f;
+                }
             }
         }
 

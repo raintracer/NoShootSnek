@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
@@ -46,6 +47,8 @@ public class GameController : MonoBehaviour
 
     private static int Score;
 
+    private static GameObject ScoreTextObject;
+
 
     public struct Sound
     {
@@ -70,6 +73,7 @@ public class GameController : MonoBehaviour
     public static void AddScore()
     {
         Score++;
+        ScoreTextObject.GetComponent<TextMeshProUGUI>().text = Score.ToString();
     }
 
     public static Vector2 GetMovement()
@@ -95,7 +99,13 @@ public class GameController : MonoBehaviour
         Wobbles = new Dictionary<Vector2Int, Wobble>();
         Score = 0;
 
-    LoadMaterials();
+        ScoreTextObject = GameObject.Find("ScoreText");
+        if (ScoreTextObject == null)
+        {
+            Debug.LogError("ScoreText object not found.");
+        }
+
+        LoadMaterials();
         DefineSounds();
         SetTileDimension(9f);
 
@@ -513,6 +523,8 @@ public class GameController : MonoBehaviour
                 return Snake.MoveDir.Up;
             case Snake.MoveDir.Left:
                 return Snake.MoveDir.Right;
+            case Snake.MoveDir.None:
+                return Snake.MoveDir.None;
         }
 
         Debug.Log("Unrecognized Direction.");

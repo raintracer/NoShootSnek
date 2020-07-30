@@ -154,28 +154,6 @@ public class Snake
     {
         if (IsPlayer)
         {
-
-            //if (GameController.GetMovement().x > 0)
-            //{
-            //    if (Bodies.First == null || GameController.OppositeDirection(Bodies.First.Value.FacingHead) != MoveDir.Right)
-            //        Facing = MoveDir.Right;
-            //}
-            //else if (GameController.GetMovement().x < 0)
-            //{
-            //    if (Bodies.First == null || GameController.OppositeDirection(Bodies.First.Value.FacingHead) != MoveDir.Left)
-            //        Facing = MoveDir.Left;
-            //}
-            //else if (GameController.GetMovement().y > 0)
-            //{
-            //    if (Bodies.First == null || GameController.OppositeDirection(Bodies.First.Value.FacingHead) != MoveDir.Up)
-            //        Facing = MoveDir.Up;
-            //}
-            //else if (GameController.GetMovement().y < 0)
-            //{
-            //    if (Bodies.First == null || GameController.OppositeDirection(Bodies.First.Value.FacingHead) != MoveDir.Down)
-            //        Facing = MoveDir.Down;
-            //}
-
             MoveDir TempMovementFacing = GetMovementFacing();
             if (TempMovementFacing != MoveDir.None)
             {

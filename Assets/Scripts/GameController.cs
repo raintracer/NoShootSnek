@@ -42,34 +42,13 @@ public class GameController : MonoBehaviour
 
     // Wobble Settings
     readonly static float TestWobbleDissipation = 1.05f;
-    static public Sound Sound_Food { get; private set; }
+    static public Dictionary<string, Sound> Sounds { get; private set; } = new Dictionary<string, Sound>();
 
     IEnumerator DeathCoroutine = null;
 
     private static int Score;
 
     private static GameObject ScoreTextObject;
-
-
-    public struct Sound
-    {
-        public AudioSource source { get; private set; }
-        readonly float volume;
-        readonly float pitch;
-
-        public Sound(AudioSource source, string clipName, float volume, float pitch)
-        {
-            this.source = source;
-            this.volume = volume;
-            this.pitch = pitch;
-            source.clip = Resources.Load<AudioClip>(clipName);
-        }
-        
-        public void Play()
-        {
-            source.Play();
-        }
-    }
 
     public static void AddScore()
     {
@@ -88,13 +67,19 @@ public class GameController : MonoBehaviour
 
     public static Vector2 GetMovement()
     {
-
         return Movement;
     }
 
     void DefineSounds()
     {
-        Sound_Food = new Sound(gameObject.AddComponent<AudioSource>(), "FoodGet1", 0.5f, 0f);
+        Sounds["Food"] = new Sound(gameObject.AddComponent<AudioSource>(), "FoodGet1", 0.5f);
+        Sounds["SnekDance"] = new Sound(gameObject.AddComponent<AudioSource>(), "SnekDance", 0.1f);
+    }
+
+    public static Sound GetSound(string SoundName)
+    {
+        if (!Sounds.TryGetValue(SoundName, out Sound SoundTemp)) Debug.LogError("Sound was not found: " + SoundName);
+        return SoundTemp;
     }
 
     void Awake()
@@ -116,7 +101,10 @@ public class GameController : MonoBehaviour
         }
 
         LoadMaterials();
+
         DefineSounds();
+        GetSound("SnekDance").Play();
+
         SetTileDimension(9f);
 
         PlayerSnake = new Snake(true, new Vector2Int(CENTER_TILE_INDEX, CENTER_TILE_INDEX), 0, 0);
@@ -566,6 +554,7 @@ public class GameController : MonoBehaviour
         {
             yield return new WaitForSeconds(3); 
             TIME_SCALE++;
+            
         }
         TIME_SCALE = 1;
         yield return new WaitForSeconds(2);

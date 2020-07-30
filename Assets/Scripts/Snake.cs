@@ -176,48 +176,13 @@ public class Snake
         }
         else if (IsPlayer)
         {
-            switch (Facing)
+            MoveDir MovementFacing = GetMovementFacing();
+            if (Facing == MovementFacing)
             {
-                case MoveDir.Right:
-                    if (GameController.GetMovement().x > 0)
-                    {
-                        SpeedMultiplier = 3f;
-                    }
-                    else if (GameController.GetMovement().x < 0)
-                    {
-                        SpeedMultiplier = 0.5f;
-                    }
-                    break;
-                case MoveDir.Down:
-                    if (GameController.GetMovement().y < 0)
-                    {
-                        SpeedMultiplier = 3f;
-                    }
-                    else if (GameController.GetMovement().y > 0)
-                    {
-                        SpeedMultiplier = 0.5f;
-                    }
-                    break;
-                case MoveDir.Left:
-                    if (GameController.GetMovement().x < 0)
-                    {
-                        SpeedMultiplier = 3f;
-                    }
-                    else if (GameController.GetMovement().x > 0)
-                    {
-                        SpeedMultiplier = 0.5f;
-                    }
-                    break;
-                case MoveDir.Up:
-                    if (GameController.GetMovement().y > 0)
-                    {
-                        SpeedMultiplier = 3f;
-                    }
-                    else if (GameController.GetMovement().y < 0)
-                    {
-                        SpeedMultiplier = 0.5f;
-                    }
-                    break;
+                SpeedMultiplier = 3f;
+            } else if (Facing == GameController.OppositeDirection(MovementFacing))
+            {
+                SpeedMultiplier = 0.5f;
             }
         }
 

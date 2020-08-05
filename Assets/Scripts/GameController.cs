@@ -48,7 +48,6 @@ public class GameController : MonoBehaviour
 
     // Wobble Settings
     readonly static float TestWobbleDissipation = 1.05f;
-    static public Dictionary<string, Sound> Sounds { get; private set; } = new Dictionary<string, Sound>();
 
     IEnumerator DeathCoroutine = null;
 
@@ -77,18 +76,6 @@ public class GameController : MonoBehaviour
         return Movement;
     }
 
-    void DefineSounds()
-    {
-        Sounds["Food"] = new Sound(gameObject.AddComponent<AudioSource>(), "FoodGet1", 0.5f);
-        Sounds["SnekDance"] = new Sound(gameObject.AddComponent<AudioSource>(), "SnekDance", 0.1f);
-    }
-
-    public static Sound GetSound(string SoundName)
-    {
-        if (!Sounds.TryGetValue(SoundName, out Sound SoundTemp)) Debug.LogError("Sound was not found: " + SoundName);
-        return SoundTemp;
-    }
-
     void Awake()
     {
 
@@ -109,8 +96,7 @@ public class GameController : MonoBehaviour
 
         LoadMaterials();
 
-        DefineSounds();
-        GetSound("SnekDance").Play();
+        GameAssets.GetSound(SoundName.SnekDance).Play();
 
         SetTileDimension(9f);
 
@@ -208,9 +194,8 @@ public class GameController : MonoBehaviour
         Time.timeScale = TIME_SCALE;
 
         // Handle Music Changes
-        float PitchDampen = 200f; 
-        GetSound("SnekDance").SetPitch(1 + (TIME_SCALE -1) / PitchDampen);
-
+        float PitchDampen = 200f;
+        GameAssets.GetSound(SoundName.SnekDance).SetPitch(1 + (TIME_SCALE - 1) / PitchDampen);
 
     }
 

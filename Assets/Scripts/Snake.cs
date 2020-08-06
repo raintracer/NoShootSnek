@@ -122,6 +122,7 @@ public class Snake
     public void Feed(Vector2Int EatPosition, SnakeBody.FoodType TypeEaten)
     {
         if (TypeEaten == SnakeBody.FoodType.Food) {
+            GameController.AddWobbleForce(HeadPosition, 0.3f, true);
             if (GameController.Food.Contains(EatPosition)) {
                 GameController.Food.Remove(EatPosition);
             }
@@ -137,6 +138,7 @@ public class Snake
 
         if (TypeEaten == SnakeBody.FoodType.Egg)
         {
+            GameController.AddWobbleForce(HeadPosition, 0.05f, true);
             GameController.Eggs.TryGetValue(EatPosition, out FoodTier);
             if (FoodTier == 0)
             {
@@ -150,7 +152,7 @@ public class Snake
         Engorged = true;
         Digestion = TypeEaten;
 
-        GameController.AddWobbleForce(HeadPosition, 0.3f, true);
+        
 
     }
 
@@ -342,12 +344,14 @@ public class Snake
         }
         if (ForgingSnake == null)
         {
-            ForgingSnake = GameController.AddEnemySnake(Bodies.Last.Value.Position, SnakeTier, Bodies.Last.Value.FacingTail);
+            MoveDir ForgeSnakeFacing = Bodies.Count > 0 ? Bodies.Last.Value.FacingTail : GameController.OppositeDirection(Facing);
+            ForgingSnake = GameController.AddEnemySnake(Bodies.Last.Value.Position, SnakeTier, ForgeSnakeFacing);
             ForgingSnake.Forging = true;
         }
         else
         {
-            ForgingSnake.AddTail(Bodies.Last.Value.Position, Bodies.Last.Value.FacingTail, false);
+            if (Bodies.Count > 0) ForgingSnake.AddTail(Bodies.Last.Value.Position, Bodies.Last.Value.FacingTail, false);
+            else ForgingSnake.AddTail(Bodies.Last.Value.Position, GameController.OppositeDirection(Facing), false);
             ForgingSnake.Length++;
         }
     }
@@ -368,9 +372,9 @@ public class Snake
 
         if (Dying)
         {
-            GameController.PlaceEgg(Bodies.Last.Value.Position, IsPlayer ? Tier + 1 : Tier);
+            GameAssets.Sound.Explosion.Play();
         }
-        else if (Bodies.Last.Value.Engorged)
+        if (Bodies.Last.Value.Engorged)
         {
             switch (Bodies.Last.Value.Digestion)
             {
@@ -406,8 +410,8 @@ public class Snake
         } 
         else
         {
-            
-            GameController.CollisionMap[Bodies.Last.Value.Position.y, Bodies.Last.Value.Position.x] = false;
+            if (Dying) GameController.PlaceEgg(Bodies.Last.Value.Position, IsPlayer ? Tier + 1 : Tier);
+            else GameController.CollisionMap[Bodies.Last.Value.Position.y, Bodies.Last.Value.Position.x] = false;
         }
 
         if (ForgingSnake != null && !Forged)
@@ -418,11 +422,11 @@ public class Snake
         Bodies.RemoveLast();
     }
 
-    public void AddTail(Vector2Int BodyPosition, MoveDir BodyFacing, bool AddFirst = true)
+    public void AddTail(Vector2Int BodyPosition, MoveDir FacingHead, bool AddFirst = true)
     {
         if (AddFirst)
         {
-            Bodies.AddFirst(new SnakeBody(BodyPosition, BodyFacing));
+            Bodies.AddFirst(new SnakeBody(BodyPosition, FacingHead));
             if(Bodies.First.Next != null)
             {
                 Bodies.First.Value.FacingTail = GameController.OppositeDirection(Bodies.First.Next.Value.FacingHead);
@@ -430,7 +434,7 @@ public class Snake
         }
         else
         {
-            Bodies.AddLast(new SnakeBody(BodyPosition, BodyFacing));
+            Bodies.AddLast(new SnakeBody(BodyPosition, FacingHead));
         }
         GameController.CollisionMap[BodyPosition.y, BodyPosition.x] = true;
     }

@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using TMPro;
 using UnityEditorInternal;
+using System.Linq;
 
 public class GameController : MonoBehaviour
 {
@@ -40,8 +41,7 @@ public class GameController : MonoBehaviour
     public static Collection<Vector2Int> Walls { get; private set; }
 
     static PlayerInputMap Inputs;
-    static Snake 
-        PlayerSnake;
+    static Snake PlayerSnake;
     static List<Snake> EnemySnakes;
     static Dictionary<Vector2Int, Wobble> Wobbles;
 
@@ -138,6 +138,13 @@ public class GameController : MonoBehaviour
         UpdateProgressBar();
     }
 
+    private void ResetPlayer()
+    {
+        PlayerSnake = new Snake(true, new Vector2Int(CENTER_TILE_INDEX, CENTER_TILE_INDEX), 0, 0);
+        DeathCoroutine = null;
+        GameAssets.Sound.SnekDance.Play();
+    }
+
     public void Update()
     {
 
@@ -225,9 +232,12 @@ public class GameController : MonoBehaviour
             foreach (KeyValuePair<Vector2Int, int> EggKeyPair in Eggs)
             {
                 int Tier = EggKeyPair.Value;
-                if (!Meshes.TryGetValue("EngorgedMesh", out Mesh mesh)) Debug.LogError("Missing mesh");
+                if (!Meshes.TryGetValue("SnakeBodyOutline", out Mesh mesh)) Debug.LogError("Missing mesh");
                 Material mat = GameAssets.GetTierMaterial(Tier);
                 DrawMeshOnGrid(mesh, mat, EggKeyPair.Key, Quaternion.identity);
+                DrawMeshOnGrid(mesh, mat, EggKeyPair.Key, Quaternion.Euler(0, 0, 90f));
+                DrawMeshOnGrid(mesh, mat, EggKeyPair.Key, Quaternion.Euler(0, 0, 180f));
+                DrawMeshOnGrid(mesh, mat, EggKeyPair.Key, Quaternion.Euler(0, 0, 270f));
             }
         }
 
@@ -532,6 +542,11 @@ public class GameController : MonoBehaviour
 
     IEnumerator PlayerDeadScript()
     {
+
+        // HatchAllEggs();
+
+        StartCoroutine("HatchRandomEggs");
+
         float TimeDelay = 0.25f;
         float TimeIncrement = TimeDelay / 5f;
         float MenuTimeDelay = 2f;
@@ -543,10 +558,43 @@ public class GameController : MonoBehaviour
             TIME_SCALE += TimeIncrement;
         }
 
+        StopCoroutine("HatchRandomEggs");
+
         TIME_SCALE = 1;
         GameAssets.Sound.SnekDance.Stop();
         yield return new WaitForSeconds(MenuTimeDelay);
-        SceneManager.LoadScene(0); //Load Menu
+
+        ResetPlayer();
+        //SceneManager.LoadScene(0); //Load Menu
+    }
+
+
+    private void HatchAllEggs()
+    {
+        foreach(KeyValuePair<Vector2Int, int> Pair in Eggs)
+        {
+            AddEnemySnake(Pair.Key, Pair.Value);
+        }
+        Eggs.Clear();
+    }
+
+    IEnumerator HatchRandomEggs()
+    {
+        float HatchDelay = 1f;
+        while (true)
+        {
+            HatchRandomEgg();
+            yield return new WaitForSeconds(HatchDelay);
+        }
+    }
+
+    private void HatchRandomEgg()
+    {
+        if (Eggs.Count == 0) return;
+        int RandomIndex = Random.Range(0, Eggs.Count);
+        KeyValuePair<Vector2Int, int> Pair = Eggs.ElementAt(RandomIndex);
+        AddEnemySnake(Pair.Key, Pair.Value);
+        Eggs.Remove(Pair.Key);
     }
 
 }

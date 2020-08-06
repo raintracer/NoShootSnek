@@ -24,6 +24,7 @@ static public class GameAssets
         {
             ["Food"] = new Sound(GO.AddComponent<AudioSource>(), "FoodGet1", 0.5f),
             ["PlaySound"] = new Sound(GO.AddComponent<AudioSource>(), "PlaySound", 0.5f),
+            ["Explosion"] = new Sound(GO.AddComponent<AudioSource>(), "Explosion", 0.5f),
             ["SnekDance"] = new Sound(GO.AddComponent<AudioSource>(), "SnekDance", 0.1f, true),
             ["MenuMusic"] = new Sound(GO.AddComponent<AudioSource>(), "MenuMusic", 0.3f, true)
         };
@@ -102,6 +103,8 @@ static public class GameAssets
         public static Sound PlaySound { get => GetSound("PlaySound"); }
 
         public static Sound MenuMusic { get => GetSound("MenuMusic"); }
+
+        public static Sound Explosion { get => GetSound("Explosion"); }
 
         private AudioSource Source;
         public string ClipName { get; private set; }

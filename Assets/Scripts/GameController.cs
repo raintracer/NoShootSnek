@@ -2,10 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 using TMPro;
-using UnityEditorInternal;
 using System.Linq;
 
 public class GameController : MonoBehaviour

@@ -1,40 +1,93 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 static public class GameAssets
 {
 
     private static readonly GameObject GO;
 
-    private static readonly Dictionary<string, Sound> Sounds;
-    private static readonly Dictionary<string, Mesh> Meshes;
-    private static readonly Dictionary<string, Material> Materials;
+    private static Dictionary<string, Sound> Sounds;
+    private static Dictionary<string, Mesh> Meshes;
+    private static Dictionary<string, UnityEngine.Material> Materials;
 
     static GameAssets()
     {
         GO = new GameObject("GameAssetObject");
         Object.DontDestroyOnLoad(GO);
-
-        Sounds = new Dictionary<string, Sound>
-        {
-            [SoundName.Food.Value] = new Sound(GO.AddComponent<AudioSource>(), "FoodGet1", 0.5f),
-            [SoundName.SnekDance.Value] = new Sound(GO.AddComponent<AudioSource>(), "SnekDance", 0.1f)
-        };
-
-        Sounds = new Dictionary<string, Sound>
-        {
-            [SoundName.Food.Value] = new Sound(GO.AddComponent<AudioSource>(), "FoodGet1", 0.5f),
-            [SoundName.SnekDance.Value] = new Sound(GO.AddComponent<AudioSource>(), "SnekDance", 0.1f)
-        };
-
+        LoadSounds();
+        LoadMaterials();
     }
+
+    private static void LoadSounds()
+    {
+        Sounds = new Dictionary<string, Sound>
+        {
+            [SoundName.Food.Value] = new Sound(GO.AddComponent<AudioSource>(), "FoodGet1", 0.5f),
+            [SoundName.SnekDance.Value] = new Sound(GO.AddComponent<AudioSource>(), "SnekDance", 0.1f)
+        };
+    }
+
+    private static void LoadMaterials()
+    {
+        Materials = new Dictionary<string, UnityEngine.Material>
+        {
+            ["Arena Grid"]      = Resources.Load<UnityEngine.Material>("Arena Grid"),
+            ["Player"]          = Resources.Load<UnityEngine.Material>("Player"),
+            ["Food"]            = Resources.Load<UnityEngine.Material>("Food"),
+            ["Line"]            = Resources.Load<UnityEngine.Material>("Line"),
+            ["Tier1"]           = Resources.Load<UnityEngine.Material>("Tier1"),
+            ["Tier2"]           = Resources.Load<UnityEngine.Material>("Tier2"),
+            ["Tier3"]           = Resources.Load<UnityEngine.Material>("Tier3"),
+            ["Tier4"]           = Resources.Load<UnityEngine.Material>("Tier4"),
+            ["Enemy Outline"]   = Resources.Load<UnityEngine.Material>("Enemy Outline"),
+            ["Wall"]            = Resources.Load<UnityEngine.Material>("Wall")
+        };
+    }
+
 
     public static Sound GetSound(SoundName _SoundName)
     {
         if (!Sounds.TryGetValue(_SoundName.Value, out Sound SoundTemp)) Debug.LogError("Sound was not found: " + _SoundName.Value);
         return SoundTemp;
+    }
+
+    public static UnityEngine.Material GetMaterial(string _MaterialName)
+    {
+        if (!Materials.TryGetValue(_MaterialName, out UnityEngine.Material MaterialTemp)) Debug.LogError("Material was not found: " + _MaterialName);
+        return MaterialTemp;
+    }
+
+    public static UnityEngine.Material GetTierMaterial(int Tier)
+    {
+
+        switch (Tier) {
+            case 1:
+                return Material.Tier1;
+            case 2:
+                return Material.Tier2;
+            case 3:
+                return Material.Tier3;
+            case 4:
+                return Material.Tier4;
+            default:
+                Debug.Log("Invalid Tier Passed (Defaulted to 1). Tier: " + Tier);
+                return Material.Tier1;
+        }
+
+    }
+
+    public static class Material
+    {
+        public static UnityEngine.Material ArenaGrid { get => GetMaterial("Arena Grid"); }
+        public static UnityEngine.Material Player { get => GetMaterial("Player"); }
+        public static UnityEngine.Material Food { get => GetMaterial("Food"); }
+        public static UnityEngine.Material Line { get => GetMaterial("Line"); }
+        public static UnityEngine.Material Tier1 { get => GetMaterial("Tier1"); }
+        public static UnityEngine.Material Tier2 { get => GetMaterial("Tier2"); }
+        public static UnityEngine.Material Tier3 { get => GetMaterial("Tier3"); }
+        public static UnityEngine.Material Tier4 { get => GetMaterial("Tier4"); }
+        public static UnityEngine.Material EnemyOutline { get => GetMaterial("Enemy Outline"); }
+        public static UnityEngine.Material Wall { get => GetMaterial("Wall"); }
     }
 
 }

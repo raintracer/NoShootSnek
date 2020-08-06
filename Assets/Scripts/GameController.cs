@@ -5,11 +5,10 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEditorInternal;
 
 public class GameController : MonoBehaviour
 {
-
-    [SerializeField] public static Dictionary<string, Material> Materials = new Dictionary<string, Material>();
     [HideInInspector] public static Dictionary<string, Mesh> Meshes { get; private set; } = new Dictionary<string, Mesh>();
 
     [HideInInspector] public readonly static bool AIMODE = false;
@@ -93,8 +92,6 @@ public class GameController : MonoBehaviour
         {
             Debug.LogError("ScoreText object not found.");
         }
-
-        LoadMaterials();
 
         GameAssets.GetSound(SoundName.SnekDance).Play();
 
@@ -195,7 +192,7 @@ public class GameController : MonoBehaviour
 
         // Handle Music Changes
         float PitchDampen = 200f;
-        GameAssets.GetSound(SoundName.SnekDance).SetPitch(1 + (TIME_SCALE - 1) / PitchDampen);
+        GameAssets.GetSound(SoundName.SnekDance).Pitch = 1 + (TIME_SCALE - 1) / PitchDampen;
 
     }
 
@@ -207,7 +204,7 @@ public class GameController : MonoBehaviour
         {
             for (int j = TileIndexMin; j <= TileIndexMax; j++)
             {
-                DrawMeshOnGrid(Meshes["ArenaSquareMesh"], Materials["Arena Grid"], new Vector2Int(i, j), Quaternion.identity);
+                DrawMeshOnGrid(Meshes["ArenaSquareMesh"], GameAssets.Material.ArenaGrid, new Vector2Int(i, j), Quaternion.identity);
             }
         }
 
@@ -220,7 +217,7 @@ public class GameController : MonoBehaviour
 
         // RENDER THE FOOD
         foreach (Vector2Int FoodPosition in Food) {
-            DrawMeshOnGrid(Meshes["EngorgedMesh"], Materials["Food"], FoodPosition, Quaternion.identity);
+            DrawMeshOnGrid(Meshes["EngorgedMesh"], GameAssets.Material.Food, FoodPosition, Quaternion.identity);
         }
 
         // RENDER THE EGGS
@@ -230,7 +227,7 @@ public class GameController : MonoBehaviour
             {
                 int Tier = EggKeyPair.Value;
                 if (!Meshes.TryGetValue("EngorgedMesh", out Mesh mesh)) Debug.LogError("Missing mesh");
-                if (!Materials.TryGetValue("Tier" + Tier, out Material mat)) Debug.LogError("Missing material: " + "Tier" + Tier);
+                Material mat = GameAssets.GetTierMaterial(Tier);
                 DrawMeshOnGrid(mesh, mat, EggKeyPair.Key, Quaternion.identity);
             }
         }
@@ -261,13 +258,14 @@ public class GameController : MonoBehaviour
         foreach (Vector2Int WallPosition in Walls)
         {
             
-            DrawMeshOnGrid(Meshes["EngorgedMesh"], Materials["Wall"], WallPosition, Quaternion.identity);
+            DrawMeshOnGrid(Meshes["EngorgedMesh"], GameAssets.Material.Wall, WallPosition, Quaternion.identity);
 
             // DRAW WALL OUTLINE
-            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], Materials["Enemy Outline"], WallPosition, Quaternion.Euler(0f, 0f, 0f));
-            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], Materials["Enemy Outline"], WallPosition, Quaternion.Euler(0f, 0f, 90f));
-            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], Materials["Enemy Outline"], WallPosition, Quaternion.Euler(0f, 0f, 180f));
-            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], Materials["Enemy Outline"], WallPosition, Quaternion.Euler(0f, 0f, 270f));
+            Material OutlineMaterial = GameAssets.Material.EnemyOutline;
+            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], OutlineMaterial, WallPosition, Quaternion.Euler(0f, 0f, 0f));
+            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], OutlineMaterial, WallPosition, Quaternion.Euler(0f, 0f, 90f));
+            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], OutlineMaterial, WallPosition, Quaternion.Euler(0f, 0f, 180f));
+            DrawMeshOnGrid(Meshes["SnakeEngorgedBodyOutline"], OutlineMaterial, WallPosition, Quaternion.Euler(0f, 0f, 270f));
         
         }
         
@@ -531,19 +529,7 @@ public class GameController : MonoBehaviour
         return Snake.MoveDir.Right;
     }
 
-    void LoadMaterials()
-    {
-        Materials["Arena Grid"]         = Resources.Load<Material>("Arena Grid");
-        Materials["Player"]             = Resources.Load<Material>("Player");
-        Materials["Food"]               = Resources.Load<Material>("Food");
-        Materials["Line"]               = Resources.Load<Material>("Line");
-        Materials["Tier1"]              = Resources.Load<Material>("Tier1");
-        Materials["Tier2"]              = Resources.Load<Material>("Tier2");
-        Materials["Tier3"]              = Resources.Load<Material>("Tier3");
-        Materials["Tier4"]              = Resources.Load<Material>("Tier4");
-        Materials["Enemy Outline"]      = Resources.Load<Material>("Enemy Outline");
-        Materials["Wall"]               = Resources.Load<Material>("Wall");
-    }
+    
 
     IEnumerator PlayerDeadScript()
     {

@@ -505,7 +505,7 @@ public class Snake
         // DRAW TAIL
         LinkedListNode<SnakeBody> node = Bodies.Last;
 
-        Material mat = GameController.Materials[IsPlayer ? "Player" : "Tier" + Tier];
+        Material mat = IsPlayer ? GameAssets.Material.Player : GameAssets.GetTierMaterial(Tier);
         Mesh mesh;
         Quaternion quat;
 
@@ -536,7 +536,7 @@ public class Snake
                         break;
                 }
 
-                GameController.DrawMeshOnGrid(GameController.Meshes["SnakeLineMesh"], GameController.Materials["Line"], node.Value.Position, quat);
+                GameController.DrawMeshOnGrid(GameController.Meshes["SnakeLineMesh"], GameAssets.Material.Line, node.Value.Position, quat);
 
 
                 // DRAW SNAKE BODY
@@ -558,10 +558,11 @@ public class Snake
                 if (!IsPlayer)
                 {
                     // DRAW ENEMY SNAKE OUTLINE
-                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position, Quaternion.Euler(0f, 0f, 0f));
-                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position, Quaternion.Euler(0f, 0f, 90f));
-                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position, Quaternion.Euler(0f, 0f, 180f));
-                    GameController.DrawMeshOnGrid(OutlineMesh, GameController.Materials["Enemy Outline"], node.Value.Position, Quaternion.Euler(0f, 0f, 270f));
+                    Material OutlineMaterial = GameAssets.Material.EnemyOutline;
+                    GameController.DrawMeshOnGrid(OutlineMesh, OutlineMaterial, node.Value.Position, Quaternion.Euler(0f, 0f, 0f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, OutlineMaterial, node.Value.Position, Quaternion.Euler(0f, 0f, 90f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, OutlineMaterial, node.Value.Position, Quaternion.Euler(0f, 0f, 180f));
+                    GameController.DrawMeshOnGrid(OutlineMesh, OutlineMaterial, node.Value.Position, Quaternion.Euler(0f, 0f, 270f));
                 }
                 
                 if (node.Value.Engorged)
@@ -570,10 +571,10 @@ public class Snake
                     Material EatenMat;
                     if(node.Value.Digestion == SnakeBody.FoodType.Food)
                     {
-                        EatenMat = GameController.Materials["Food"];
+                        EatenMat = GameAssets.Material.Food;
                     } else
                     {
-                        EatenMat = GameController.Materials["Tier" + node.Value.FoodTier];
+                        EatenMat = GameAssets.GetTierMaterial(node.Value.FoodTier);
                     }
                     GameController.DrawMeshOnGrid(GameController.Meshes["ArenaSquareMesh"], EatenMat, node.Value.Position, Quaternion.Euler(0f, 0f, 0f));
                 }
@@ -606,7 +607,7 @@ public class Snake
         if (!Dying)
         {
             GameController.DrawMeshOnGrid(GameController.Meshes["SnakeHeadMesh"], mat, HeadPosition, quat);
-            GameController.DrawMeshOnGrid(GameController.Meshes["SnakeSnoutOutline"], GameController.Materials["Enemy Outline"], HeadPosition, quat);
+            GameController.DrawMeshOnGrid(GameController.Meshes["SnakeSnoutOutline"], GameAssets.Material.EnemyOutline, HeadPosition, quat);
         }
         
 

@@ -9,6 +9,10 @@ public class MenuController : MonoBehaviour
 
     GameObject AnyKeyTextObject;
     GameObject HighScoreTextObject;
+    bool MenuReactive = true;
+    Coroutine BlinkTextRoutine;
+    float BlinkTextDelay = 0.75f;
+
     private float HighScore
     {
         get { return PlayerPrefs.GetInt("HighScore"); }
@@ -35,31 +39,49 @@ public class MenuController : MonoBehaviour
 
     public void Start()
     {
-        StartCoroutine("BlinkPlayText");
+        ResetBlink();
+        GameAssets.Sound.MenuMusic.Play();
     }
 
     IEnumerator BlinkPlayText()
     {
         while (true)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(BlinkTextDelay);
             AnyKeyTextObject.SetActive(false);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(BlinkTextDelay);
             AnyKeyTextObject.SetActive(true);
         }
     }
 
     void Update()
     {
+        if (!MenuReactive) return;
+
         if (Keyboard.current.anyKey.wasPressedThisFrame)
         {
-            SceneManager.LoadScene(1);
+            MenuReactive = false;
+            GameAssets.Sound.MenuMusic.Stop();
+            StartCoroutine("PlayGameSequence");
+
+            return;
         }
     }
 
-    void PlayGame()
+
+    void ResetBlink()
     {
-        // SceneManager.LoadScene(1);
+        if (BlinkTextRoutine != null) StopCoroutine(BlinkTextRoutine);
+        BlinkTextRoutine = StartCoroutine("BlinkPlayText");
+    }
+
+    IEnumerator PlayGameSequence()
+    {
+        BlinkTextDelay = 0.1f;
+        ResetBlink();
+        GameAssets.Sound.PlaySound.Play();
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(1);
     }
 
 }

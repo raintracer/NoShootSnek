@@ -23,7 +23,9 @@ static public class GameAssets
         Sounds = new Dictionary<string, Sound>
         {
             ["Food"] = new Sound(GO.AddComponent<AudioSource>(), "FoodGet1", 0.5f),
-            ["SnekDance"] = new Sound(GO.AddComponent<AudioSource>(), "SnekDance", 0.1f)
+            ["PlaySound"] = new Sound(GO.AddComponent<AudioSource>(), "PlaySound", 0.5f),
+            ["SnekDance"] = new Sound(GO.AddComponent<AudioSource>(), "SnekDance", 0.1f, true),
+            ["MenuMusic"] = new Sound(GO.AddComponent<AudioSource>(), "MenuMusic", 0.3f, true)
         };
     }
 
@@ -97,6 +99,9 @@ static public class GameAssets
         public static Sound Food { get => GetSound("Food"); }
         public static Sound SnekDance { get => GetSound("SnekDance"); }
 
+        public static Sound PlaySound { get => GetSound("PlaySound"); }
+
+        public static Sound MenuMusic { get => GetSound("MenuMusic"); }
 
         private AudioSource Source;
         public string ClipName { get; private set; }
@@ -111,12 +116,21 @@ static public class GameAssets
             set { Source.pitch = value; }
         }
 
-        public Sound(AudioSource Source, string ClipName, float Volume, float Pitch = 1.00f)
+        public bool Loop
+        {
+            get { return Source.loop; }
+            set { Source.loop = value; }
+        }
+
+
+
+        public Sound(AudioSource Source, string ClipName, float Volume, bool Loop = false, float Pitch = 1.00f)
         {
             this.Source = Source;
             this.ClipName = ClipName;
             this.Volume = Volume;
             this.Pitch = Pitch;
+            this.Loop = Loop;
             this.Source.clip = Resources.Load<AudioClip>(ClipName);
         }
 

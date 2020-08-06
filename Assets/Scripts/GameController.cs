@@ -544,6 +544,7 @@ public class GameController : MonoBehaviour
         }
 
         TIME_SCALE = 1;
+        GameAssets.Sound.SnekDance.Stop();
         yield return new WaitForSeconds(MenuTimeDelay);
         SceneManager.LoadScene(0); //Load Menu
     }

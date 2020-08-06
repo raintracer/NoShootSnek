@@ -130,7 +130,7 @@ public class Snake
                 GameController.GrowArena();
                 GameController.AddScore();
             }
-            GameAssets.GetSound(SoundName.Food).Play();
+            GameAssets.Sound.Food.Play();
             Length++;
             GameController.PlaceRandomFood();
         }

@@ -93,7 +93,7 @@ public class GameController : MonoBehaviour
             Debug.LogError("ScoreText object not found.");
         }
 
-        GameAssets.GetSound(SoundName.SnekDance).Play();
+        GameAssets.Sound.SnekDance.Play();
 
         SetTileDimension(9f);
 
@@ -126,7 +126,6 @@ public class GameController : MonoBehaviour
         TileDimensionFloat = Amount;
         TileDimensionInt = (int)TileDimensionFloat - ((int)TileDimensionFloat + 1) % 2;
         GridSize = ArenaGameSize / TileDimensionFloat;
-        // Vector2 GridOffset = new Vector2(GridSize / 2, GridSize / 2);
         TileIndexMin = CENTER_TILE_INDEX - (TileDimensionInt - 1) / 2;
         TileIndexMax = CENTER_TILE_INDEX + (TileDimensionInt - 1) / 2;
         RenderOffset = new Vector2(-GridSize * CENTER_TILE_INDEX, -GridSize * CENTER_TILE_INDEX);
@@ -192,7 +191,7 @@ public class GameController : MonoBehaviour
 
         // Handle Music Changes
         float PitchDampen = 200f;
-        GameAssets.GetSound(SoundName.SnekDance).Pitch = 1 + (TIME_SCALE - 1) / PitchDampen;
+        GameAssets.Sound.SnekDance.Pitch = 1 + (TIME_SCALE - 1) / PitchDampen;
 
     }
 

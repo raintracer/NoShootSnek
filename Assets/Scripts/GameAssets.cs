@@ -22,36 +22,36 @@ static public class GameAssets
     {
         Sounds = new Dictionary<string, Sound>
         {
-            [SoundName.Food.Value] = new Sound(GO.AddComponent<AudioSource>(), "FoodGet1", 0.5f),
-            [SoundName.SnekDance.Value] = new Sound(GO.AddComponent<AudioSource>(), "SnekDance", 0.1f)
+            ["Food"] = new Sound(GO.AddComponent<AudioSource>(), "FoodGet1", 0.5f),
+            ["SnekDance"] = new Sound(GO.AddComponent<AudioSource>(), "SnekDance", 0.1f)
         };
+    }
+
+
+    public static Sound GetSound(string _SoundName)
+    {
+        if (!Sounds.TryGetValue(_SoundName, out Sound SoundTemp)) Debug.LogError("Sound was not found: " + _SoundName);
+        return SoundTemp;
     }
 
     private static void LoadMaterials()
     {
         Materials = new Dictionary<string, UnityEngine.Material>
         {
-            ["Arena Grid"]      = Resources.Load<UnityEngine.Material>("Arena Grid"),
-            ["Player"]          = Resources.Load<UnityEngine.Material>("Player"),
-            ["Food"]            = Resources.Load<UnityEngine.Material>("Food"),
-            ["Line"]            = Resources.Load<UnityEngine.Material>("Line"),
-            ["Tier1"]           = Resources.Load<UnityEngine.Material>("Tier1"),
-            ["Tier2"]           = Resources.Load<UnityEngine.Material>("Tier2"),
-            ["Tier3"]           = Resources.Load<UnityEngine.Material>("Tier3"),
-            ["Tier4"]           = Resources.Load<UnityEngine.Material>("Tier4"),
-            ["Enemy Outline"]   = Resources.Load<UnityEngine.Material>("Enemy Outline"),
-            ["Wall"]            = Resources.Load<UnityEngine.Material>("Wall")
+            ["Arena Grid"] = Resources.Load<UnityEngine.Material>("Arena Grid"),
+            ["Player"] = Resources.Load<UnityEngine.Material>("Player"),
+            ["Food"] = Resources.Load<UnityEngine.Material>("Food"),
+            ["Line"] = Resources.Load<UnityEngine.Material>("Line"),
+            ["Tier1"] = Resources.Load<UnityEngine.Material>("Tier1"),
+            ["Tier2"] = Resources.Load<UnityEngine.Material>("Tier2"),
+            ["Tier3"] = Resources.Load<UnityEngine.Material>("Tier3"),
+            ["Tier4"] = Resources.Load<UnityEngine.Material>("Tier4"),
+            ["Enemy Outline"] = Resources.Load<UnityEngine.Material>("Enemy Outline"),
+            ["Wall"] = Resources.Load<UnityEngine.Material>("Wall")
         };
     }
 
-
-    public static Sound GetSound(SoundName _SoundName)
-    {
-        if (!Sounds.TryGetValue(_SoundName.Value, out Sound SoundTemp)) Debug.LogError("Sound was not found: " + _SoundName.Value);
-        return SoundTemp;
-    }
-
-    public static UnityEngine.Material GetMaterial(string _MaterialName)
+    private static UnityEngine.Material GetMaterial(string _MaterialName)
     {
         if (!Materials.TryGetValue(_MaterialName, out UnityEngine.Material MaterialTemp)) Debug.LogError("Material was not found: " + _MaterialName);
         return MaterialTemp;
@@ -90,49 +90,46 @@ static public class GameAssets
         public static UnityEngine.Material Wall { get => GetMaterial("Wall"); }
     }
 
-}
-
-public class SoundName
-{
-    public string Value;
-    private SoundName(string Value) { this.Value = Value; }
-
-    public static SoundName Food { get => new SoundName("Food"); }
-    public static SoundName SnekDance { get => new SoundName("SnekDance"); }
-
-}
-
-public class Sound
-{
-    private AudioSource Source;
-    public string ClipName { get; private set; }
-    public float Volume {
-        get { return Source.volume; }
-        set { Source.volume = value; } 
-    }
-    public float Pitch
+    public class Sound
     {
-        get { return Source.pitch; }
-        set { Source.pitch = value; }
-    }
 
-    public Sound(AudioSource Source, string ClipName, float Volume, float Pitch = 1.00f)
-    {
-        this.Source = Source;
-        this.ClipName = ClipName;
-        this.Volume = Volume;
-        this.Pitch = Pitch;
-        this.Source.clip = Resources.Load<AudioClip>(ClipName);
-    }
+        // EXPOSE SOUNDS FOR STRONG TYPING
+        public static Sound Food { get => GetSound("Food"); }
+        public static Sound SnekDance { get => GetSound("SnekDance"); }
 
-    public void Play()
-    {
-        Source.Play();
-    }
 
-    public void Stop()
-    {
-        Source.Stop();
+        private AudioSource Source;
+        public string ClipName { get; private set; }
+        public float Volume
+        {
+            get { return Source.volume; }
+            set { Source.volume = value; }
+        }
+        public float Pitch
+        {
+            get { return Source.pitch; }
+            set { Source.pitch = value; }
+        }
+
+        public Sound(AudioSource Source, string ClipName, float Volume, float Pitch = 1.00f)
+        {
+            this.Source = Source;
+            this.ClipName = ClipName;
+            this.Volume = Volume;
+            this.Pitch = Pitch;
+            this.Source.clip = Resources.Load<AudioClip>(ClipName);
+        }
+
+        public void Play()
+        {
+            Source.Play();
+        }
+
+        public void Stop()
+        {
+            Source.Stop();
+        }
+
     }
 
 }

@@ -540,9 +540,9 @@ public class GameController : MonoBehaviour
     IEnumerator PlayerDeadScript()
     {
 
-        // HatchAllEggs();
+        HatchAllEggs();
 
-        StartCoroutine("HatchRandomEggs");
+        //StartCoroutine("HatchRandomEggs");
 
         float TimeDelay = 0.25f;
         float TimeIncrement = TimeDelay / 5f;
@@ -555,7 +555,7 @@ public class GameController : MonoBehaviour
             TIME_SCALE += TimeIncrement;
         }
 
-        StopCoroutine("HatchRandomEggs");
+        //StopCoroutine("HatchRandomEggs");
 
         TIME_SCALE = 1;
         GameAssets.Sound.SnekDance.Stop();
